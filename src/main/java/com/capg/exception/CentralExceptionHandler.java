@@ -14,6 +14,10 @@ public class CentralExceptionHandler {
     public ResponseEntity<String> exceptionHandler(CustomerNotFoundException exception) {
         return new ResponseEntity<String>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<String> exceptionHandler1(OrderNotFoundException exception) {
+        return new ResponseEntity<String>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> methodArgumentNotValidException(MethodArgumentNotValidException e){
         return new ResponseEntity<>(e.getBindingResult().getFieldErrors().stream().map(x -> x.getDefaultMessage()).collect(Collectors.joining(",")), HttpStatus.BAD_REQUEST);

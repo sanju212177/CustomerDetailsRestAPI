@@ -19,9 +19,12 @@ public class Customer {
     @Enumerated(EnumType.STRING)
     private CustomerType customerType;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "addressId")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "addressId",unique = true)
     private Address address;
+
+    //@OneToMany(cascade = CascadeType.ALL)
+
 
     public void setAddress(Address address) {
         this.address = address;

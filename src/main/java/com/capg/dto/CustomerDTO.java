@@ -4,6 +4,7 @@ import com.capg.entity.Address;
 import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.Objects;
 
@@ -25,14 +26,15 @@ public class CustomerDTO {
 
     @Enumerated(EnumType.STRING)
     private CustomerType customerType;
+    @Valid
     @NotNull(message = "Address cannot be null")
-    private Address address;
+    private AddressDTO address;
 
     public CustomerDTO(){
 
     }
 
-    public CustomerDTO(int customerId, String firstName, String lastName, String email, CustomerType customerType, Address address) {
+    public CustomerDTO(int customerId, String firstName, String lastName, String email, CustomerType customerType, AddressDTO address) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -40,11 +42,11 @@ public class CustomerDTO {
         this.customerType = customerType;
     }
 
-    public Address getAddress() {
+    public AddressDTO getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
+    public void setAddress(AddressDTO address) {
         this.address = address;
     }
 
