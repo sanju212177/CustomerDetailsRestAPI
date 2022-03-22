@@ -13,41 +13,41 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/customer")
 public class CustomerController {
     @Autowired
     CustomerService customerService;
 
-    @PostMapping("/customer")
+    @PostMapping("/create")
     private ResponseEntity<String> saveCustomer(@Valid@RequestBody CustomerDTO customer) {
         customerService.createCustomer(customer);
         return new ResponseEntity<>("Customer Details Entered Successfully", HttpStatus.CREATED);
     }
 
-    @GetMapping("/customer")
+    @GetMapping("/getAll")
     private List<Customer> getAllCustomers() {
         return customerService.readCustomer();
     }
 
-    @GetMapping("/customer/{customerId}")
+    @GetMapping("/get/{customerId}")
     private Customer getCustomer(@PathVariable("customerId") int customerId) {
         Customer customer = customerService.getCustomerById(customerId);
         return customer;
     }
 
-    @PutMapping("/customer")
+    @PutMapping("/update")
     private ResponseEntity<String> update(@RequestBody Customer customer) {
         customerService.updateCustomer(customer);
         return new ResponseEntity<String>("Customer details updated", HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/customer/{customerId}")
+    @DeleteMapping("/delete/{customerId}")
     private ResponseEntity<String> deleteCustomer(@PathVariable("customerId") int customerId) {
         customerService.deleteCustomer(customerId);
-        return new ResponseEntity<>("Customer with given ID is Deleted", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Customer with given ID is Deleted", HttpStatus.BAD_REQUEST);
     }
 
-    @PatchMapping("/customer/{customerId}")
+    @PatchMapping("/patch/{customerId}")
     private ResponseEntity<String> updatePatch(@PathVariable int customerId, @RequestBody Customer customer) {
         Customer cus = customerService.getCustomerById(customerId);
         boolean needUpdate = false;
@@ -71,9 +71,7 @@ public class CustomerController {
             customerService.updateCustomer(cus);
             return new ResponseEntity<>("Customer details Modified", HttpStatus.ACCEPTED);
         }
-        else{
-            return new ResponseEntity<>("Customer details not Modified", HttpStatus.NOT_MODIFIED);
-        }
+        return null;
 
     }
 }
