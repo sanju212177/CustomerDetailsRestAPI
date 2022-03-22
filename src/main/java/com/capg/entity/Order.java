@@ -1,4 +1,4 @@
 package com.capg.entity;
 
-public class Users {
+public class Order {
 }

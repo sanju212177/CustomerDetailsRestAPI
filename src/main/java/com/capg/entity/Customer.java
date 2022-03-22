@@ -1,6 +1,7 @@
 package com.capg.entity;
 
 //import com.capg.dto.AddressDTO;
+import com.capg.dto.AddressDTO;
 import com.capg.dto.CustomerType;
 
 import javax.persistence.*;
@@ -17,6 +18,18 @@ public class Customer {
     private String email;
     @Enumerated(EnumType.STRING)
     private CustomerType customerType;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "addressId")
+    private Address address;
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
 
     public Customer(){
 

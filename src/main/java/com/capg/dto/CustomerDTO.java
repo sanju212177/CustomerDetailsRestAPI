@@ -1,6 +1,6 @@
 package com.capg.dto;
 
-//import com.capg.entity.Address;
+import com.capg.entity.Address;
 import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
@@ -25,17 +25,27 @@ public class CustomerDTO {
 
     @Enumerated(EnumType.STRING)
     private CustomerType customerType;
+    @NotNull(message = "Address cannot be null")
+    private Address address;
 
     public CustomerDTO(){
 
     }
 
-    public CustomerDTO(int customerId, String firstName, String lastName, String email, CustomerType customerType) {
+    public CustomerDTO(int customerId, String firstName, String lastName, String email, CustomerType customerType, Address address) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.customerType = customerType;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public int getCustomerId() {

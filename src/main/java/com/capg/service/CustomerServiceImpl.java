@@ -1,9 +1,12 @@
 package com.capg.service;
 
 import com.capg.dto.CustomerDTO;
+import com.capg.entity.Address;
 import com.capg.entity.Customer;
+//import com.capg.entity.Users;
 import com.capg.exception.CustomerNotFoundException;
 import com.capg.repository.CustomerRepository;
+//import com.capg.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +27,10 @@ public class CustomerServiceImpl implements CustomerService {
         customer1.setLastName(customer.getLastName());
         customer1.setEmail(customer.getEmail());
         customer1.setCustomerType(customer.getCustomerType());
-        /*Address address = new Address();
+        Address address = new Address();
         address.setStreet(customer.getAddress().getStreet());
         address.setCity(customer.getAddress().getCity());
-        customer1.setAddress(address);*/
+        customer1.setAddress(address);
         customerRepository.save(customer1);
     }
 
@@ -40,14 +43,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void updateCustomer(Customer customer) {
-        customerRepository.save(customer);
-    }
-
-    @Override
-    public void modifyCustomer(String firstName, int customerID) {
-        // TODO Auto-generated method stub
-        Customer customer = customerRepository.findById(customerID).get();
-        customer.setFirstName(firstName);
         customerRepository.save(customer);
     }
 
