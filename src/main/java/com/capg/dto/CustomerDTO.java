@@ -1,11 +1,12 @@
 package com.capg.dto;
 
-import com.capg.entity.Address;
+import com.capg.CustomValidation.DOBValidation;
 import org.springframework.data.annotation.Id;
-
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 public class CustomerDTO {
@@ -26,20 +27,46 @@ public class CustomerDTO {
 
     @Enumerated(EnumType.STRING)
     private CustomerType customerType;
+    @NotNull(message = "Date of birth cannot be blank")
+    @Past(message = "Date of birth cannot be in the future")
+    @DOBValidation
+    private LocalDate dateOfBirth;
     @Valid
     @NotNull(message = "Address cannot be null")
     private AddressDTO address;
+    @Valid
+    @NotNull(message = "Order details cannot be null")
+    private List<OrderDTO> order;
 
     public CustomerDTO(){
 
     }
 
-    public CustomerDTO(int customerId, String firstName, String lastName, String email, CustomerType customerType, AddressDTO address) {
+    public CustomerDTO(int customerId, String firstName, String lastName, String email, CustomerType customerType, LocalDate dateOfBirth, AddressDTO address, List<OrderDTO> order) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.customerType = customerType;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+        this.order = order;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public List<OrderDTO> getOrder() {
+        return order;
+    }
+
+    public void setOrder(List<OrderDTO> order) {
+        this.order = order;
     }
 
     public AddressDTO getAddress() {
@@ -95,12 +122,12 @@ public class CustomerDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomerDTO that = (CustomerDTO) o;
-        return customerId == that.customerId && firstName.equals(that.firstName) && lastName.equals(that.lastName) && email.equals(that.email) && customerType == that.customerType;
+        return customerId == that.customerId && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(email, that.email) && customerType == that.customerType && Objects.equals(dateOfBirth, that.dateOfBirth) && Objects.equals(address, that.address) && Objects.equals(order, that.order);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(customerId, firstName, lastName, email, customerType);
+        return Objects.hash(customerId, firstName, lastName, email, customerType, dateOfBirth, address, order);
     }
 
     @Override
@@ -111,6 +138,9 @@ public class CustomerDTO {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", customerType=" + customerType +
+                ", dateOfBirth=" + dateOfBirth +
+                ", address=" + address +
+                ", order=" + order +
                 '}';
     }
 }

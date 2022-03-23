@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class OrderDTO {
     @Id
@@ -13,6 +14,7 @@ public class OrderDTO {
     private Integer productId;
     @NotNull(message = "product name cannot be null")
     @NotBlank(message = "product name cannot be blank")
+    @Size(min=3,message= "Product Name should have atleast 3 characters")
     private String productName;
 
     public String getProductName() {

@@ -41,12 +41,17 @@ public class CustomerController {
         return new ResponseEntity<String>("Customer details updated", HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/delete/{customerId}")
+    @DeleteMapping("/deleteCustomer/{customerId}")
     private ResponseEntity<String> deleteCustomer(@PathVariable("customerId") int customerId) {
         customerService.deleteCustomer(customerId);
         return new ResponseEntity<>("Customer with given ID is Deleted", HttpStatus.BAD_REQUEST);
     }
+    @DeleteMapping("/deleteProduct/{productId}")
+    public ResponseEntity<String> deleteOrder(@PathVariable Integer productId){
+        customerService.deleteAProduct(productId);
+        return new ResponseEntity<>("Product deleted Successfully",HttpStatus.OK);
 
+    }
     @PatchMapping("/patch/{customerId}")
     private ResponseEntity<String> updatePatch(@PathVariable int customerId, @RequestBody Customer customer) {
         Customer cus = customerService.getCustomerById(customerId);

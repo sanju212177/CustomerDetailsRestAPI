@@ -1,10 +1,9 @@
 package com.capg.entity;
 
-//import com.capg.dto.AddressDTO;
-import com.capg.dto.AddressDTO;
 import com.capg.dto.CustomerType;
-
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,13 +17,42 @@ public class Customer {
     private String email;
     @Enumerated(EnumType.STRING)
     private CustomerType customerType;
+    private LocalDate dateOfBirth;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "addressId",unique = true)
     private Address address;
 
-    //@OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade=CascadeType.ALL)
+    @JoinColumn(unique=false)
+    private List<Order> order;
 
+    public Customer(int customerId, String firstName, String lastName, String email, CustomerType customerType, LocalDate dateOfBirth, Address address, List<Order> order) {
+        this.customerId = customerId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.customerType = customerType;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+        this.order = order;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public List<Order> getOrder() {
+        return order;
+    }
+
+    public void setOrder(List<Order> order) {
+        this.order = order;
+    }
 
     public void setAddress(Address address) {
         this.address = address;

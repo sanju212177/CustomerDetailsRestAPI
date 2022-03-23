@@ -1,40 +1,22 @@
 package com.capg.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name="product")
+@Table(name="capg_product2")
 public class Order {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer productId;
     private String productName;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "customer_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Customer customer;
-
-    public Order(Integer productId, String productName, Customer customer) {
+    public Order(Integer productId, String productName) {
         this.productId = productId;
         this.productName = productName;
-        this.customer = customer;
     }
 
     public Order() {
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
     }
 
     @Override
@@ -42,7 +24,6 @@ public class Order {
         return "Order{" +
                 "productId=" + productId +
                 ", productName='" + productName + '\'' +
-                ", customer=" + customer +
                 '}';
     }
 
@@ -51,12 +32,12 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(productId, order.productId) && Objects.equals(productName, order.productName) && Objects.equals(customer, order.customer);
+        return Objects.equals(productId, order.productId) && Objects.equals(productName, order.productName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(productId, productName, customer);
+        return Objects.hash(productId, productName);
     }
 
     public Integer getProductId() {

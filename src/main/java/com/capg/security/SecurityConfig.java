@@ -20,10 +20,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     }
 
 }*/
-
-
 package com.capg.security;
 
+import com.capg.entity.User;
+import com.capg.service.CustomerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -33,30 +34,29 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
-
+    @Autowired
+    CustomerService customerService;
 
     @Override
     protected  void configure(AuthenticationManagerBuilder auth)throws Exception{
-
+        List<User> usersList = customerService.readUsers();
+        for(User user:usersList) {
             auth
                     .inMemoryAuthentication()
-                    .withUser("sanjay")
-                    .password(passwordEncoder().encode("1234"))
-                    .roles("CUSTOMER")
-                    .and()
-                    .withUser("admin")
-                    .password(passwordEncoder().encode("admin123"))
-                    .roles("ADMIN");
-
-
+                    .withUser(user.getUsername())
+                    .password(passwordEncoder().encode(user.getPassword()))
+                    .roles(user.getRole());
+        }
     }
     @Override
     protected void configure(HttpSecurity http)throws Exception{
         http.authorizeRequests()
-                .antMatchers("/customer/create","/customer/delete")
+                .antMatchers("/customer/create","/customer/deleteCustomer","/customer/deleteProduct")
                 .hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()

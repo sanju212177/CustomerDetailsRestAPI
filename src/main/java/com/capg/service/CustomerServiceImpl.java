@@ -1,22 +1,21 @@
 package com.capg.service;
 
 import com.capg.dto.CustomerDTO;
-import com.capg.dto.OrderDTO;
 import com.capg.entity.Address;
 import com.capg.entity.Customer;
-//import com.capg.entity.Users;
 import com.capg.entity.Order;
+import com.capg.entity.User;
 import com.capg.exception.CustomerNotFoundException;
 import com.capg.exception.OrderNotFoundException;
 import com.capg.repository.CustomerRepository;
-//import com.capg.repository.UsersRepository;
 import com.capg.repository.OrderRepository;
+import com.capg.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -26,6 +25,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     OrderRepository orderRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Override
     @Transactional
     public void createCustomer(CustomerDTO customer) {
@@ -34,10 +36,21 @@ public class CustomerServiceImpl implements CustomerService {
         customer1.setLastName(customer.getLastName());
         customer1.setEmail(customer.getEmail());
         customer1.setCustomerType(customer.getCustomerType());
+        customer1.setDateOfBirth(customer.getDateOfBirth());
+
         Address address = new Address();
         address.setStreet(customer.getAddress().getStreet());
         address.setCity(customer.getAddress().getCity());
         customer1.setAddress(address);
+
+        List <Order> order =new ArrayList<>();
+        for(int i=0;i<customer.getOrder().size();i++) {
+            Order o = new Order();
+            o.setProductName(customer.getOrder().get(i).getProductName());
+            o.setProductId(customer.getOrder().get(i).getProductId());
+            order.add(o);
+        }
+        customer1.setOrder(order);
         customerRepository.save(customer1);
     }
 
@@ -46,6 +59,11 @@ public class CustomerServiceImpl implements CustomerService {
         List<Customer> customerList = new ArrayList<Customer>();
         customerRepository.findAll().forEach(customer -> customerList.add(customer));
         return customerList;
+    }
+
+    @Override
+    public List<User> readUsers() {
+        return new ArrayList<>(userRepository.findAll());
     }
 
     @Override
@@ -90,53 +108,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void createOrder(OrderDTO order) {
-        Order order1 = new Order();
-        order1.setProductId(order.getProductId());
-        order1.setProductName(order.getProductName());
-        orderRepository.save(order1);
+    public void deleteAProduct(Integer productId) throws OrderNotFoundException {
+        Optional<Order>optionalOrder = orderRepository.findById(productId);
+        if(optionalOrder.isPresent()) {
+            orderRepository.deleteById(productId);
+        }
+        else
+            throw new OrderNotFoundException("Delete Operation failed \n No Order Found with id: "+productId);
     }
 
-    @Override
-    public List<Order> readOrders() {
-        List<Order> orderList = new ArrayList<Order>();
-        orderRepository.findAll().forEach(order -> orderList.add(order));
-        return orderList;
-    }
-
-    @Override
-    public Order getOrderById(int productId) {
-        try{
-            if(orderRepository.existsById(productId)) {
-                return orderRepository.findById(productId).get();
-            }
-            else{
-                throw new OrderNotFoundException("No Order with this ID exists.");
-            }
-        }
-        catch (OrderNotFoundException e){
-            System.out.println(e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
-    public void updateOrder(Order order) {
-        orderRepository.save(order);
-    }
-
-    @Override
-    public void deleteOrder(int productId) {
-        try{
-            if(orderRepository.existsById(productId)) {
-                orderRepository.deleteById(productId);
-            }
-            else{
-                throw new OrderNotFoundException("No Order with this ID exists.");
-            }
-        }
-        catch (OrderNotFoundException e){
-            System.out.println(e.getMessage());
-        }
-    }
 }
